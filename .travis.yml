@@ -7,6 +7,9 @@ before_install:
     - source $HOME/google-cloud-sdk/path.bash.inc
     - gcloud components update kubectl
     - gcloud auth activate-service-account --key-file service-account.json
+    - gcloud config set project multi-k8s-289815
+    - gcloud config set compute/zone europe-west2-a 	
+    - gcloud container cluster get-credentials multi-cluster
 # docker run -it -v $(pwd):/app ruby:2.4 sh
 # gem install travis
 # travis login
