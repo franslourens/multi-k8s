@@ -1,35 +1,12 @@
-language: generic
 sudo: required
 services:
-  - docker
-
+    - docker
 before_install:
-  - docker build -t franslourens/react-test -f ./client/Dockerfile.dev ./client
-
-script:
-  - docker run franslourens/react-test npm test -- --coverage
-
-after_success:
-  - docker build -t franslourens/multi-client ./client
-  - docker build -t franslourens/multi-nginx ./nginx
-  - docker build -t franslourens/multi-server ./server
-  - docker build -t franslourens/multi-worker ./worker
-  # Log in to the docker CLI
-  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
-  # Take those images and push them to docker hub
-  - docker push franslourens/multi-client
-  - docker push franslourens/multi-nginx
-  - docker push franslourens/multi-server
-  - docker push franslourens/multi-worker
-
-deploy:
-  provider: elasticbeanstalk
-  region: us-west-2
-  app: multi-docker
-  env: MultiDocker-env
-  bucket_name: elasticbeanstalk-us-west-2-272249359580
-  bucket_path: docker-multi
-  on:
-    branch: master
-  access_key_id: $AWS_ACCESS_KEY
-  secret_access_key: $AWS_SECRET_KEY
+    - openssl aes-256-cbc -K $encrypted_9f3b5599b056_key -iv $encrypted_9f3b5599b056_iv -in service-account.json.enc -out service-account.json -d
+    - curl https://sdk.cloud.google.com | bash > /dev/null;
+    - source $HOME/google-cloud-sdk/path.bash.inc
+    - gcloud components update kubectl
+    - gcloud auth activate-service-account --key-file service-account.json
+# docker run -it -v $(pwd):/app ruby:2.4 sh
+# gem install travis
+# travis login
